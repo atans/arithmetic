@@ -149,7 +149,6 @@ func rand3Numbers(min, max int, verify func(n1, n2, n3 int) bool) (int, int, int
 }
 
 func main() {
-	fmt.Println(10 % 3)
 	fmt.Println("数字算术出题")
 	var t, min, max int
 	var is []int
@@ -256,8 +255,10 @@ func main() {
 	if err != nil {
 		fmt.Println("输出文件失败")
 	} else {
-		fmt.Printf("输入文件: %s\n", filename)
-		openFile(filename)
+		fmt.Printf("输出文件: %s\n", filename)
+		if err := openFile(filename); err != nil {
+			fmt.Println(err)
+		}
 	}
 
 }
@@ -286,8 +287,7 @@ func openFile(file string) error {
 	}
 
 	if err := cmd.Start(); err != nil {
-		fmt.Println("PDF 打开失败")
-		return err
+		return errors.New("PDF 打开失败")
 	}
 
 	return nil
