@@ -148,6 +148,35 @@ func rand3Numbers(min, max int, verify func(n1, n2, n3 int) bool) (int, int, int
 	}
 }
 
+func isValidAlgorithm(values []int, i int) bool {
+	for _, v := range values {
+		if v == i {
+			return true
+		}
+	}
+
+	return false
+}
+
+func openFile(file string) error {
+	var cmd *exec.Cmd
+
+	switch runtime.GOOS {
+	case "windows":
+		cmd = exec.Command("rundll32.exe", "url.dll,FileProtocolHandler", file)
+	case "linux":
+		cmd = exec.Command("gnome-open", file)
+	default:
+		cmd = exec.Command("open", file)
+	}
+
+	if err := cmd.Start(); err != nil {
+		return errors.New("PDF 打开失败")
+	}
+
+	return nil
+}
+
 func main() {
 	fmt.Println("数字算术出题")
 	var t, min, max int
@@ -240,7 +269,7 @@ func main() {
 
 	pdf.Ln(15)
 	pdf.SetFont("NotoSansSC-Regular", "", 9)
-	pdf.Write(lineHeight, fmt.Sprintf("Printed at: %s", time.Now().Format(time.RFC850)))
+	pdf.Write(lineHeight, fmt.Sprintf("Printed at: %s  %s", time.Now().Format(time.RFC850), "github.com/atans"))
 	now := time.Now()
 	filename := fmt.Sprintf("%s(%d-%d)_%d%d%d_%d%d%02d.pdf", course.name, min, max, now.Year(), now.Month(), now.Day(), now.Hour(), now.Minute(), now.Second())
 
@@ -254,33 +283,4 @@ func main() {
 		}
 	}
 
-}
-
-func isValidAlgorithm(values []int, i int) bool {
-	for _, v := range values {
-		if v == i {
-			return true
-		}
-	}
-
-	return false
-}
-
-func openFile(file string) error {
-	var cmd *exec.Cmd
-
-	switch runtime.GOOS {
-	case "windows":
-		cmd = exec.Command("rundll32.exe", "url.dll,FileProtocolHandler", file)
-	case "linux":
-		cmd = exec.Command("gnome-open", file)
-	default:
-		cmd = exec.Command("open", file)
-	}
-
-	if err := cmd.Start(); err != nil {
-		return errors.New("PDF 打开失败")
-	}
-
-	return nil
 }
