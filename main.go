@@ -221,17 +221,10 @@ func main() {
 
 	for _, v := range results {
 
-		//line = fmt.Sprintf("%s %s", line, v)
-
 		x = float64(j)*40 + 20
 
 		pdf.SetXY(x, y)
-
 		pdf.Write(lineHeight, v)
-
-		// fmt.Printf("j %d w %f h %f\n", j, x, y)
-
-		// fmt.Println(v)
 
 		if j+1 == rowCount {
 			pdf.Ln(15)
@@ -278,7 +271,6 @@ func openFile(file string) error {
 
 	switch runtime.GOOS {
 	case "windows":
-
 		cmd = exec.Command("rundll32.exe", "url.dll,FileProtocolHandler", file)
 	case "linux":
 		cmd = exec.Command("gnome-open", file)
